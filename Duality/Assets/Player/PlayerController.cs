@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.EventSystems;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D rb;
@@ -71,14 +71,15 @@ public class PlayerController : MonoBehaviour
                 animator.SetBool("isDashing", (false));
             }
         }
-
-        if (Input.GetButtonDown("Fire1"))
+        if (!EventSystem.current.IsPointerOverGameObject())
         {
-            isDashing = true;
-            dashTimer = 0;
-            animator.SetBool("isDashing", (true));
+            if (Input.GetButtonDown("Fire1"))
+            {
+                isDashing = true;
+                dashTimer = 0;
+                animator.SetBool("isDashing", (true));
+            }
         }
-
         if (moveInput == 0 || rb.velocity.x == 0)
         {
             isDashFinished = false;

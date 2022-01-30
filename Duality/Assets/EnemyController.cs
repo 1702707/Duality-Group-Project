@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    [SerializeField] bool isStatic;
     [SerializeField] float speed = 1;
     bool FacingRight;
 
@@ -16,31 +15,31 @@ public class EnemyController : MonoBehaviour
     Vector3[] waypoints;
     Vector3 targetWaypoint;
 
+    bool paused;
     // Start is called before the first frame update
     void Start()
     {
         _Collider = GetComponent<Collider2D>();
         _Animator = GetComponent<Animator>();
-        if (!isStatic)
+        _Animator.SetFloat("Speed", 1);
+        waypoints = new Vector3[PathHolder.childCount];
+        for (int i = 0; i < waypoints.Length; i++)
         {
-            waypoints = new Vector3[PathHolder.childCount];
-            for (int i = 0; i < waypoints.Length; i++)
-            {
-                waypoints[i] = PathHolder.GetChild(i).position;
-                waypoints[i] = new Vector3(waypoints[i].x, waypoints[i].y, transform.position.z);
-            }
-
-            if (_Animator != null)
-                _Animator.SetBool("Moving", true);
-            FacingRight = false;
-            StartCoroutine(FollowPath(waypoints));
+            waypoints[i] = PathHolder.GetChild(i).position;
+            waypoints[i] = new Vector3(waypoints[i].x, waypoints[i].y, transform.position.z);
         }
+
+        if (_Animator != null)
+            _Animator.SetBool("Moving", true);
+        FacingRight = false;
+        paused = false;
+        StartCoroutine(FollowPath(waypoints));
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!isStatic)
+        if (!paused)
         {
             //Designate sprite orientation
             if (_Animator.GetBool("Moving"))
@@ -81,18 +80,25 @@ public class EnemyController : MonoBehaviour
 
         while (true)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetWaypoint, speed * Time.deltaTime);
-            if (transform.position == targetWaypoint)
+            if (paused)
             {
-                targetWaypointIndex = (targetWaypointIndex + 1) % waypoints.Length;
-                targetWaypoint = waypoints[targetWaypointIndex];
-                if (_Animator != null)
-                    _Animator.SetBool("Moving", false);
-                yield return new WaitForSeconds(Random.Range(waitTime.x,waitTime.y));
-                if (_Animator != null)
-                    _Animator.SetBool("Moving", true);
+                yield return null;
             }
-            yield return null;
+            else
+            {
+                transform.position = Vector3.MoveTowards(transform.position, targetWaypoint, speed * Time.deltaTime);
+                if (transform.position == targetWaypoint)
+                {
+                    targetWaypointIndex = (targetWaypointIndex + 1) % waypoints.Length;
+                    targetWaypoint = waypoints[targetWaypointIndex];
+                    if (_Animator != null)
+                        _Animator.SetBool("Moving", false);
+                    yield return new WaitForSeconds(Random.Range(waitTime.x, waitTime.y));
+                    if (_Animator != null)
+                        _Animator.SetBool("Moving", true);
+                }
+                yield return null;
+            }
         }
     }
 
@@ -113,6 +119,19 @@ public class EnemyController : MonoBehaviour
             {
                 //Hurt Player
             }
+        }
+    }
+
+    public void Pause()
+    {
+        paused = !paused;
+        if(paused)
+        {
+            _Animator.SetFloat("Speed", 0);
+        }
+        else
+        {
+            _Animator.SetFloat("Speed", 1);
         }
     }
 

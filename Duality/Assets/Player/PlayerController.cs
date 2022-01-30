@@ -40,19 +40,22 @@ public class PlayerController : MonoBehaviour
     private bool isWhiteWolfActive = false;
 
     //Health
-    [SerializeField] private int maxHealth;
+    [SerializeField] HealthBar healthBar;
+    [SerializeField] private int maxHealth = 6;
     [SerializeField] private float hitTime;
     private int health;
     private bool isHit = false;
     private float hitTimer = 0;
+
 
     // Start is called before the first frame update
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-
+        maxHealth = 6;
         health = maxHealth;
+        healthBar.Updatebar(health);
     }
 
     void Update()

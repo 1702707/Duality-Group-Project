@@ -39,7 +39,7 @@ public class OptionsMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     //set Wwise music audio volume
@@ -67,6 +67,11 @@ public class OptionsMenu : MonoBehaviour
         Cursor.visible = true;
         //change scene
         SceneManager.LoadScene("MenuScene");
+    }
+
+    public void ToggleActive()
+    {
+        gameObject.SetActive(!gameObject.activeInHierarchy);
     }
 
 }

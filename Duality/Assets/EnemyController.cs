@@ -21,39 +21,45 @@ public class EnemyController : MonoBehaviour
     {
         _Collider = GetComponent<Collider2D>();
         _Animator = GetComponent<Animator>();
-        waypoints = new Vector3[PathHolder.childCount];
-        for (int i = 0; i < waypoints.Length; i++)
+        if (!isStatic)
         {
-            waypoints[i] = PathHolder.GetChild(i).position;
-            waypoints[i] = new Vector3(waypoints[i].x, waypoints[i].y, transform.position.z);
+            waypoints = new Vector3[PathHolder.childCount];
+            for (int i = 0; i < waypoints.Length; i++)
+            {
+                waypoints[i] = PathHolder.GetChild(i).position;
+                waypoints[i] = new Vector3(waypoints[i].x, waypoints[i].y, transform.position.z);
+            }
+
+            if (_Animator != null)
+                _Animator.SetBool("Moving", true);
+            FacingRight = false;
+            StartCoroutine(FollowPath(waypoints));
         }
-        if(!isStatic)
-        if (_Animator != null)
-            _Animator.SetBool("Moving", true);
-        FacingRight = false;
-        StartCoroutine(FollowPath(waypoints));
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Designate sprite orientation
-        if (_Animator.GetBool("Moving"))
+        if (!isStatic)
         {
-            if (targetWaypoint.x > transform.position.x)
+            //Designate sprite orientation
+            if (_Animator.GetBool("Moving"))
             {
-                //right
-                if (!FacingRight)
+                if (targetWaypoint.x > transform.position.x)
                 {
-                    Flip(true);
+                    //right
+                    if (!FacingRight)
+                    {
+                        Flip(true);
+                    }
                 }
-            }
-            else if (targetWaypoint.x < transform.position.x)
-            {
-                //left
-                if (FacingRight)
+                else if (targetWaypoint.x < transform.position.x)
                 {
-                    Flip(false);
+                    //left
+                    if (FacingRight)
+                    {
+                        Flip(false);
+                    }
                 }
             }
         }

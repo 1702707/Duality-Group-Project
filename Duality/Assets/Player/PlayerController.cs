@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D rb;
+    private Animator animator;
 
     //Movement
     [SerializeField] private float moveSpeed;
@@ -40,10 +41,14 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
     void Update()
     {
+        //Moving
+        animator.SetBool("isWalking", (moveInput != 0));
+
         //Jumping
         if (isGrounded == true)
         {
@@ -51,6 +56,7 @@ public class PlayerController : MonoBehaviour
             {
                 rb.velocity = Vector2.up * jumpForce;
                 isGrounded = false;
+                animator.SetBool("isJumping", (true));
             }
         }
 
@@ -62,6 +68,7 @@ public class PlayerController : MonoBehaviour
             {
                 isDashing = false;
                 isDashFinished = true;
+                animator.SetBool("isDashing", (false));
             }
         }
 
@@ -69,6 +76,7 @@ public class PlayerController : MonoBehaviour
         {
             isDashing = true;
             dashTimer = 0;
+            animator.SetBool("isDashing", (true));
         }
 
         if (moveInput == 0 || rb.velocity.x == 0)
@@ -80,8 +88,11 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        //Jumping
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, whatIsGround);
+        animator.SetBool("isJumping", (!isGrounded));
 
+        //Moving
         moveInput = Input.GetAxis("Horizontal");
         Debug.Log(moveInput);
         rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
@@ -97,6 +108,7 @@ public class PlayerController : MonoBehaviour
             isDashFinished = false;
         }
 
+        //Dashing
         if (isDashing)
         {
             if (facingRight)

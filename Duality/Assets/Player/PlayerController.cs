@@ -27,25 +27,43 @@ public class PlayerController : MonoBehaviour
     private bool isDashing = false;
     private bool isDashFinished = false;
 
-    //Attacking
-    [SerializeField] private float attackTime;
+    //Biting
+    [SerializeField] private float biteTime;
     [SerializeField] private Transform enemyCheck;
     [SerializeField] private float enemyCheckRadius;
     [SerializeField] private LayerMask whatIsEnemy;
-    private float attackTimer = 0;
+    private float biteTimer = 0;
     private bool enemyFound = false;
-    private bool isAttacking = false;
+    private bool isBiting = false;
 
+    //Switching Wolf
+    private bool isWhiteWolfActive = false;
+
+    //Health
+    [SerializeField] private int maxHealth;
+    [SerializeField] private float hitTime;
+    private int health;
+    private bool isHit = false;
+    private float hitTimer = 0;
 
     // Start is called before the first frame update
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+
+        health = maxHealth;
     }
 
     void Update()
     {
+        //Switching Wolf
+        if (Input.GetButtonDown("Fire2"))
+        {
+            isWhiteWolfActive = !isWhiteWolfActive;
+            animator.SetBool("isWhiteWolfActive", (isWhiteWolfActive));
+        }
+
         //Moving
         animator.SetBool("isWalking", (moveInput != 0));
 
@@ -57,6 +75,29 @@ public class PlayerController : MonoBehaviour
                 rb.velocity = Vector2.up * jumpForce;
                 isGrounded = false;
                 animator.SetBool("isJumping", (true));
+            }
+        }
+
+        //
+
+        //Biting
+        if (isBiting)
+        {
+            biteTimer += Time.deltaTime;
+            if (biteTimer >= biteTime)
+            {
+                isBiting = false;
+                animator.SetBool("isBiting", (false));
+            }
+        }
+
+        if (isWhiteWolfActive)
+        {
+            if (Input.GetButtonDown("Fire1"))
+            {
+                isBiting = true;
+                biteTimer = 0;
+                animator.SetBool("isBiting", (true));
             }
         }
 
@@ -72,11 +113,14 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetButtonDown("Fire1"))
+        if (!isWhiteWolfActive)
         {
-            isDashing = true;
-            dashTimer = 0;
-            animator.SetBool("isDashing", (true));
+            if (Input.GetButtonDown("Fire1"))
+            {
+                isDashing = true;
+                dashTimer = 0;
+                animator.SetBool("isDashing", (true));
+            }
         }
 
         if (moveInput == 0 || rb.velocity.x == 0)
@@ -88,13 +132,23 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        //Taking Damage
+
+
+
+        //Biting
+        //enemyFound = Physics2D.OverlapCircle(enemyCheck.position, enemyCheckRadius, whatIsEnemy);
+        if (isBiting && enemyFound)
+        {
+            //---WHAT HAPPENS TO THE ENEMY GOES HERE-----------------------------------------------------------------------------------------
+        }
+
         //Jumping
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, whatIsGround);
         animator.SetBool("isJumping", (!isGrounded));
 
         //Moving
         moveInput = Input.GetAxis("Horizontal");
-        Debug.Log(moveInput);
         rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
 
         if (facingRight == false && moveInput > 0)

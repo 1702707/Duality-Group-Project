@@ -8,6 +8,7 @@ public class CameraController : MonoBehaviour
     public float YHeight;
     public bool trailing;
     public float speed;
+    public Vector2 cameraLimits;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,9 +28,12 @@ public class CameraController : MonoBehaviour
         {
             if (target != null)
             {
-                Vector3 Targetposition = transform.position;
-                Targetposition.x = target.transform.position.x;
-                transform.position = Targetposition;
+                if (target.transform.position.x > cameraLimits.x && target.transform.position.x < cameraLimits.y)
+                {
+                    Vector3 Targetposition = transform.position;
+                    Targetposition.x = target.transform.position.x;
+                    transform.position = Targetposition;
+                }
             }
         }
     }
@@ -40,9 +44,12 @@ public class CameraController : MonoBehaviour
         {
             if (target != null)
             {
-                Vector3 Targetposition = transform.position;
+                if (target.transform.position.x > cameraLimits.x && target.transform.position.x < cameraLimits.y)
+                {
+                    Vector3 Targetposition = transform.position;
                 Targetposition.x = Mathf.Lerp(transform.position.x, target.transform.position.x, speed * Time.deltaTime);
                 transform.position = Targetposition;
+                }
             }
         }
     }

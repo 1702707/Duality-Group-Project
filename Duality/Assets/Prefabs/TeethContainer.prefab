@@ -213,8 +213,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6034348397330188901}
-  - component: {fileID: 6034348397330188902}
   - component: {fileID: 5312402969166373164}
+  - component: {fileID: 3124417514272580837}
   m_Layer: 0
   m_Name: TeethContainer
   m_TagString: Untagged
@@ -239,22 +239,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6034348397330188902
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6034348397330188903}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a4e8dc839438834eaced67d15ace87e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isStatic: 1
-  speed: 1
-  waitTime: {x: 0, y: 0}
-  PathHolder: {fileID: 0}
 --- !u!61 &5312402969166373164
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -281,6 +265,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 4.55, y: 0.75}
   m_EdgeRadius: 0
+--- !u!114 &3124417514272580837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6034348397330188903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 987608afeb10f40459b2e814176cd4dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anitmators:
+  - {fileID: 6034348397403011547}
+  - {fileID: 6034348396013799350}
+  - {fileID: 6034348396534539570}
 --- !u!1 &6034348397403011541
 GameObject:
   m_ObjectHideFlags: 0

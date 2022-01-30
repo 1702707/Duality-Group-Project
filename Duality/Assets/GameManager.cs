@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    public GameObject blocker;
     public Image image;
     public Sprite play;
     public Sprite pause;
@@ -16,12 +17,19 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         paused = false;
+        StartCoroutine(DisableBlocker());
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    IEnumerator DisableBlocker()
+    {
+        yield return new WaitForSeconds(13.0f);
+        blocker.SetActive(false);
     }
 
     public void ToggleGameState()

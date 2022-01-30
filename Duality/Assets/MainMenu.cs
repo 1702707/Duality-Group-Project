@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    public GameObject blocker;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,8 +24,9 @@ public class MainMenu : MonoBehaviour
     }
     IEnumerator startGame()
     {
+        blocker.SetActive(true);
         //Wait
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(1.2f);
         //swap to new scene
         SceneManager.LoadScene("GameScene");
     }
